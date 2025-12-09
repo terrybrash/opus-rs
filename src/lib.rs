@@ -42,7 +42,7 @@ impl Application {
 			ffi::OPUS_APPLICATION_VOIP => Ok(Application::Voip),
 			ffi::OPUS_APPLICATION_AUDIO => Ok(Application::Audio),
 			ffi::OPUS_APPLICATION_RESTRICTED_LOWDELAY => Ok(Application::LowDelay),
-			_ => Err(Error::bad_arg(what))
+			_ => Err(Error::bad_arg(what)),
 		}
 	}
 }
@@ -228,9 +228,9 @@ pub enum FrameSize {
 	/// Use 40 ms frames.
 	Ms40 = ffi::OPUS_FRAMESIZE_40_MS,
 	/// Use 60 ms frames.
-	Ms60  = ffi::OPUS_FRAMESIZE_60_MS,
+	Ms60 = ffi::OPUS_FRAMESIZE_60_MS,
 	/// Use 80 ms frames.
-	Ms80  = ffi::OPUS_FRAMESIZE_80_MS,
+	Ms80 = ffi::OPUS_FRAMESIZE_80_MS,
 	/// Use 100 ms frames.
 	Ms100 = ffi::OPUS_FRAMESIZE_100_MS,
 	/// Use 120 ms frames.
@@ -655,7 +655,10 @@ macro_rules! encoder_ctls {
 			pub fn get_expert_frame_duration(&mut self) -> Result<FrameSize> {
 				let mut value: i32 = 0;
 				ctl!($fn, self, ffi::OPUS_GET_EXPERT_FRAME_DURATION_REQUEST, &mut value);
-				FrameSize::from_raw(value, concat!(stringify!($fn), "(OPUS_GET_EXPERT_FRAME_DURATION)"))
+				FrameSize::from_raw(
+					value,
+					concat!(stringify!($fn), "(OPUS_GET_EXPERT_FRAME_DURATION)"),
+				)
 			}
 
 			/// If set to true, disables almost all use of prediction, making frames almost completely independent.
@@ -871,7 +874,7 @@ pub mod packet {
 	}
 
 	/// Parse an Opus packet into one or more frames.
-	pub fn parse(packet: &[u8]) -> Result<Packet> {
+	pub fn parse(packet: &[u8]) -> Result<Packet<'_>> {
 		let mut toc: u8 = 0;
 		let mut frames = [ptr::null(); 48];
 		let mut sizes = [0i16; 48];
