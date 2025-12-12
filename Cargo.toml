@@ -11,4 +11,4 @@ categories = ["api-bindings", "encoding", "compression",
 edition = "2024"
 
 [dependencies]
-audiopus_sys = { git = "git@github.com:terrybrash/audiopus_sys.git" }
+audiopus_sys = { git = "https://github.com/terrybrash/audiopus_sys.git" }
